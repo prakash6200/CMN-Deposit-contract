@@ -59,7 +59,7 @@ contract Treasety is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUp
         depositDetails[depositId] = depositInfo;
         userDetails[msg.sender].totalDepositAmount += _amount;
         userDetails[msg.sender].depositIds.push(depositId);
-        depositTokenAddress.transfer(address(this), _amount);
+        depositTokenAddress.transferFrom(msg.sender, address(this), _amount);
 
         emit Deposit(msg.sender, depositId++, _amount, block.timestamp);
     }
