@@ -59,13 +59,18 @@ contract Treasety is Initializable, ERC20Upgradeable, OwnableUpgradeable, UUPSUp
         depositDetails[depositId] = depositInfo;
         userDetails[msg.sender].totalDepositAmount += _amount;
         userDetails[msg.sender].depositIds.push(depositId);
-        depositId++;
         depositTokenAddress.transfer(address(this), _amount);
 
+        emit Deposit(msg.sender, depositId++, _amount, block.timestamp);
+    }
+
+    function reward(uint256 _amount, address _recipent) public onlyOwner {
+        require(_recipent != address(0), "This is zero address");
+        depositTokenAddress.transfer(_recipent, _amount);
         emit Withdraw(msg.sender, _amount, block.timestamp);
     }
 
-    function adminWithdraw(uint256 _amount) public onlyOwner{
+    function adminWithdraw(uint256 _amount) public onlyOwner {
         require(depositTokenAddress.balanceOf(address(this)) > _amount , "Not Enough Tokens available");
         depositTokenAddress.transfer(address(owner()), _amount);
 
